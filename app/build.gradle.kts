@@ -92,7 +92,7 @@ android {
     }
 
     val gkdSigningConfig = signingConfigs.create("gkd") {
-        storeFile = file(project.properties["GKD_STORE_FILE"] as String)
+        storeFile = file(project.properties["GKD_STORE_FILE"].toString())
         storePassword = project.properties["GKD_STORE_PASSWORD"].toString()
         keyAlias = project.properties["GKD_KEY_ALIAS"].toString()
         keyPassword = project.properties["GKD_KEY_PASSWORD"].toString()

@@ -1,11 +1,7 @@
 package li.songe.gkd.ui
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
-import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,17 +23,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -54,9 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import li.songe.gkd.META
 import li.songe.gkd.MainActivity
 import li.songe.gkd.app
@@ -91,7 +83,6 @@ import li.songe.gkd.util.saveFileToDownloads
 import li.songe.gkd.util.shareFile
 import li.songe.gkd.util.sharedDir
 import li.songe.gkd.util.throttle
-import li.songe.gkd.util.toast
 import java.io.File
 
 @Destination<RootGraph>(style = ProfileTransitions::class)
@@ -185,13 +176,8 @@ fun AboutPage() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AnimatedLogoIcon(
+                LogoIcon(
                     modifier = Modifier
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = throttle { toast("你干嘛~ 哎呦~") }
-                        )
                         .fillMaxWidth(0.33f)
                         .aspectRatio(1f)
                 )
@@ -472,26 +458,14 @@ private fun getShareApkFile(): File {
 }
 
 @Composable
-private fun AnimatedLogoIcon(
+private fun LogoIcon(
     modifier: Modifier = Modifier
 ) {
     val darkTheme = LocalDarkTheme.current
     val colorRid = if (darkTheme) SafeR.better_white else SafeR.better_black
-    var atEnd by remember { mutableStateOf(false) }
-    val animation = AnimatedImageVector.animatedVectorResource(id = SafeR.ic_anim_logo)
-    val painter = rememberAnimatedVectorPainter(
-        animation,
-        atEnd
-    )
-    LaunchedEffect(Unit) {
-        while (isActive) {
-            atEnd = !atEnd
-            delay(animation.totalDuration.toLong())
-        }
-    }
     Icon(
         modifier = modifier,
-        painter = painter,
+        painter = painterResource(SafeR.ic_anim_logo),
         contentDescription = null,
         tint = colorResource(colorRid),
     )
